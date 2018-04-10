@@ -10,7 +10,7 @@ function obtenerCurso(req, res){
             if(!curso) return res.status(404).send({message:'el curso no existe'});
     
             res.status(200).send({ curso })
-        })
+         })
       }else
         return res.status(404).send({message:'el identificador del curso no es valido'});
 }
@@ -25,39 +25,36 @@ function obtenerCursos(req, res){
 }
 
 function guardarCurso(req,res){
-    console.log('POST /api/curso')
-    console.log(req.body)
-
-    let curso = new Curso()
-    curso.Nombre = req.body.Nombre
+    let curso = new Curso();
+    curso.Nombre = req.body.Nombre;
 
     curso.save((err, cursoGuardado)=>{
-        if(err)return res.status(500).send({message : 'error al guardar'})
+        if(err)return res.status(500).send({message : 'error al guardar'});
 
-        res.status(200).send({ curso: cursoGuardado })
+        res.status(200).send({ curso: cursoGuardado });
     })
 }
 
 function actualizarCurso(req, res){
-    let cursoId = req.params.cursoId
-    let update = req.body
+    let cursoId = req.params.cursoId;
+    let update = req.body;
 
     Curso.findByIdAndUpdate(cursoId, update, (err, cursoActualizado)=> {
-        if(err)return res.status(500).send({message : 'error al actualizar'})
+        if(err)return res.status(500).send({message : 'error al actualizar'});
 
-        res.status(200).send({ curso: cursoActualizado })
-    })
+        res.status(200).send({ curso: cursoActualizado });
+    });
 }
 
 function eliminarCurso(req, res){
-    let cursoId = req.params.cursoId
+    let cursoId = req.params.cursoId;
 
     Curso.findById(cursoId, (err, curso)=> {
-        if(err)return res.status(500).send({message : 'error al obtener el curso a eliminar'})
+        if(err)return res.status(500).send({message : 'error al obtener el curso a eliminar'});
 
-        Curso.remove(err => {
-            if(err)return res.status(500).send({message : 'error al eliminar el curso'})
-            res.status(200).send({ message : 'El curso ha sido eliminado' })
+        Curso.remove((err) => {
+            if(err)return res.status(500).send({message : 'error al eliminar el curso'});
+            res.status(200).send({ message : 'El curso ha sido eliminado' });
         })
     })
 }
