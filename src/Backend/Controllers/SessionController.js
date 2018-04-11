@@ -3,31 +3,39 @@
 const Modelo = require('../Models/UsuarioModel'),
     service = require('../Services/Service');
 
-function singUp(req, res){
+function signUp(req, res){
     var modelo = new Modelo({
         email: req.body.email,
+        displayName: req.body.displayName,
         password: req.body.password
     });
 
     modelo.save((err)=> {
-        if(err) return res.status(400).send({message : `error al realizar la petición ${err}`});
-        return res.status(200).send({token:service.createToken(modelo), contraseña: req.body.password});
+        if(err) return res.status(500).send({message : `error al crear el usuario: ${err}`});
+        return res.status(201).send({token:service.createToken(modelo)});
     });
 }
 
-function logIn(req, res){
+function signIn(req, res){
     Modelo.findOne({email : req.body.email}, (err, modelo)=>{
-        if(err) return res.status(400).send({message : `error al realizar la petición ${err}`});
+        if(err) return res.status(500).send({message : err});
         if(!modelo) return res.status(404).send({Message : 'No existe el usuario'});
         //if(modelo.password != req.body.password) return res.status(404).send({Message : `Contaseña Incorrecta ${modelo} y ${req.body.password}` });
         // Comprobar si hay errores
         // Si el usuario existe o no
         // Y si la contraseña es correcta
-        return res.status(200).send({token:service.createToken(modelo)});
+
+        req.user = modelo;
+        res.status(200).send({ 
+            message: 'Te has logeado correctamente',
+            token:service.createToken(modelo) 
+        });
+
+        //return res.status(200).send({token:service.createToken(modelo)});
     });
 }
 
 module.exports = {
-  singUp,
-  logIn
+  signUp,
+  signIn
 }

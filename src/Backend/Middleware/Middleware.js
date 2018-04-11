@@ -1,3 +1,4 @@
+'use strict'
 // middleware.js
 var jwt = require('jwt-simple');
 var moment = require('moment');
